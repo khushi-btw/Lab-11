@@ -2,10 +2,11 @@
 (function () {
   'use strict';
 
-  const toggleButton = document.getElementById('togglePassword');
-  const passwordInput = document.getElementById('password');
+  document.querySelectorAll('[data-password-toggle]').forEach(function (toggleButton) {
+    const inputWrapper = toggleButton.closest('.input-wrapper');
+    const passwordInput = inputWrapper && inputWrapper.querySelector('input');
+    if (!passwordInput) return;
 
-  if (toggleButton && passwordInput) {
     toggleButton.addEventListener('click', function () {
       const showPassword = passwordInput.type === 'password';
       passwordInput.type = showPassword ? 'text' : 'password';
@@ -16,7 +17,7 @@
       if (showIcon) showIcon.style.display = showPassword ? 'none' : '';
       if (hideIcon) hideIcon.style.display = showPassword ? '' : 'none';
     });
-  }
+  });
 
   const loginForm = document.getElementById('loginForm');
   const submitButton = document.getElementById('submitBtn');

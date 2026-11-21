@@ -61,6 +61,7 @@ svg { flex: 0 0 auto; }
 .alert { display: flex; gap: 11px; margin: 0 0 20px; padding: 13px 15px; border: 1px solid; border-radius: 12px; font-size: 13px; }
 .alert__icon { font-weight: 800; }
 .alert--error { color: var(--danger); background: rgba(255,91,116,.08); border-color: rgba(255,156,170,.25); }
+.alert--success { color: #f8c7e5; background: rgba(236,106,179,.08); border-color: rgba(244,154,202,.25); }
 .login-form { display: flex; flex-direction: column; gap: 19px; }
 .form-group { display: flex; flex-direction: column; gap: 8px; }
 .form-label { color: #f5e9f3; font-size: 13px; font-weight: 600; }
@@ -81,6 +82,10 @@ svg { flex: 0 0 auto; }
 .toggle-password:focus-visible, .btn:focus-visible, a:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
 .form-group--error .form-input { border-color: var(--danger); }
 .form-error { color: var(--danger); font-size: 12px; }
+.form-hint { color: #a88eaa; font-size: 12px; }
+.auth-switch { margin: 22px 0 0; color: var(--muted); font-size: 13px; text-align: center; }
+.auth-switch a { color: var(--pink); font-weight: 650; }
+.auth-switch a:hover { color: #ffd4ea; text-decoration: underline; text-underline-offset: 3px; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 52px; border: 1px solid transparent; border-radius: 12px; font-weight: 700; cursor: pointer; transition: transform .18s, box-shadow .18s, background .18s; }
 .btn--primary { margin-top: 5px; color: #351a35; background: linear-gradient(110deg, #ffc2df, #d9a6ff 58%, #c292f4); box-shadow: 0 8px 26px rgba(225,103,178,.25); }
 .btn--primary:hover { transform: translateY(-2px); background: linear-gradient(110deg, #ffd6e9, #e6c4ff 58%, #d2adff); box-shadow: 0 12px 32px rgba(225,103,178,.36); }

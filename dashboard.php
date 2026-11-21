@@ -4,6 +4,9 @@ require_once __DIR__ . '/includes/session.php';
 initSession();
 requireAuth();
 
+header('Cache-Control: no-store, no-cache, must-revalidate');
+header('Pragma: no-cache');
+
 $username = htmlspecialchars($_SESSION['username'], ENT_QUOTES, 'UTF-8');
 $initial = htmlspecialchars(strtoupper(substr($_SESSION['username'], 0, 1)), ENT_QUOTES, 'UTF-8');
 $pageTitle = 'Welcome — Luma';
