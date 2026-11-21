@@ -85,7 +85,7 @@ include __DIR__ . '/includes/header.php';
     <main class="login-panel" id="main-content">
         <section class="login-panel__inner" aria-labelledby="login-heading">
             <header class="login-panel__header">
-                <span class="lab-badge">LUMA · LAB 11</span>
+                <span class="brand-badge">LUMA</span>
                 <h1 class="login-panel__heading" id="login-heading">Welcome Back</h1>
                 <p class="login-panel__subtext">Sign in to continue to your account.</p>
             </header>
@@ -139,7 +139,6 @@ include __DIR__ . '/includes/header.php';
                     <span class="btn__text">Sign In</span><span class="btn__spinner" aria-hidden="true"></span>
                 </button>
             </form>
-            <p class="login-note">Protected with secure, database-backed sign in.</p>
         </section>
     </main>
 </div>
