@@ -29,7 +29,7 @@ $error = '';
 $fieldError = [];
 $username = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     if (!verifyCsrf((string)($_POST['csrf_token'] ?? ''))) {
         $error = 'Your sign-in request expired. Refresh the page and try again.';
     } else {

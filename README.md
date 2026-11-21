@@ -1,18 +1,18 @@
-﻿# Lab 11 — Database-Based User Login Validation
+# Lab 11 - Database-Based User Login Validation
 
 A beginner-friendly PHP 8 and PostgreSQL login application. The Luma interface uses a charcoal, purple, and lavender palette, with a responsive sign-in card and matching authenticated welcome page.
 
 ## Project structure
 
-- `index.php` — redirects to the sign-in page.
-- `login.php` — form, server-side required-field validation, and database authentication.
-- `dashboard.php` — session-protected personalized welcome page.
-- `logout.php` — clears the session and returns to sign in.
-- `config/database.php` — PostgreSQL PDO connection using environment settings.
-- `includes/session.php` — secure session and CSRF helpers.
-- `database/schema.sql` — non-destructive `users` table definition.
-- `scripts/seed_demo_user.php` — creates the table if needed and inserts a demo user only if absent.
-- `assets/css/style.css`, `assets/js/script.js` — application styling and small interface interactions.
+- `index.php` - redirects to the sign-in page.
+- `login.php` - form, server-side required-field validation, and database authentication.
+- `dashboard.php` - session-protected personalized welcome page.
+- `logout.php` - clears the session and returns to sign in.
+- `config/database.php` - PostgreSQL PDO connection using environment settings.
+- `includes/session.php` - secure session and CSRF helpers.
+- `database/schema.sql` - non-destructive `users` table definition.
+- `scripts/seed_demo_user.php` - creates the table if needed and inserts a demo user only if absent.
+- `assets/css/style.css`, `assets/js/script.js` - application styling and small interface interactions.
 
 ## Local setup
 
@@ -47,8 +47,8 @@ The server rejects missing fields before querying. It selects the matching user 
 
 ## Evaluation cases
 
-- Correct account → personalized welcome page.
-- Unknown username or incorrect password → generic sign-in error.
-- Both fields empty, or either field empty → required-field validation errors.
-- SQL-injection-style username → treated as a literal username by the prepared query; no match returns the generic error.
-- Logout → session is destroyed and sign-in is shown again.
+- Correct account: personalized welcome page.
+- Unknown username or incorrect password: generic sign-in error.
+- Both fields empty, or either field empty: required-field validation errors.
+- SQL-injection-style username: treated as a literal username by the prepared query; no match returns the generic error.
+- Logout: the session is destroyed and sign-in is shown again.
