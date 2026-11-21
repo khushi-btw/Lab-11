@@ -53,7 +53,6 @@ function seedUser(PDO $pdo, string $username, string $plainPassword): void
     );
     $insert->execute([':username' => $username, ':hash' => $hash]);
     echo "[OK] Demo user '{$username}' created successfully.\n";
-    echo "     Hash: {$hash}\n";
 }
 
 try {

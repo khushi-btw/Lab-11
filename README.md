@@ -1,212 +1,54 @@
-# Lab 11 — Database-Based User Login Validation
+﻿# Lab 11 — Database-Based User Login Validation
 
-> **BTech CSE Web Programming Lab Assignment**
-> A database-backed authentication system using **PHP 8**, **PostgreSQL**, and **PDO**.
+A beginner-friendly PHP 8 and PostgreSQL login application. The Luma interface uses a charcoal, purple, and lavender palette, with a responsive sign-in card and matching authenticated welcome page.
 
----
+## Project structure
 
-## Project: ACCESS — Authentication Portal
+- `index.php` — redirects to the sign-in page.
+- `login.php` — form, server-side required-field validation, and database authentication.
+- `dashboard.php` — session-protected personalized welcome page.
+- `logout.php` — clears the session and returns to sign in.
+- `config/database.php` — PostgreSQL PDO connection using environment settings.
+- `includes/session.php` — secure session and CSRF helpers.
+- `database/schema.sql` — non-destructive `users` table definition.
+- `scripts/seed_demo_user.php` — creates the table if needed and inserts a demo user only if absent.
+- `assets/css/style.css`, `assets/js/script.js` — application styling and small interface interactions.
 
-A complete, secure login validation web application demonstrating:
+## Local setup
 
-- Password hashing with `password_hash()` / `password_verify()` (bcrypt)
-- SQL injection prevention with PDO prepared statements
-- CSRF token protection
-- PHP session management with session ID regeneration
-- Environment-variable-based database configuration
-- Split-screen responsive UI with dark navy + electric-blue design
+Requirements: PHP 8 with `pdo` and `pdo_pgsql`, and PostgreSQL.
 
----
+1. Create a database (if one does not already exist):
 
-## Demo Credentials
+   ```sql
+   CREATE DATABASE lab11_db;
+   ```
 
-| Field    | Value          |
-|----------|----------------|
-| Username | `lab11student` |
-| Password | `Demo@12345`   |
+2. Copy `.env.example` to `.env` and set `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, and `DB_PASSWORD`. Keep `.env` local; it is ignored by Git.
+3. From this directory run the schema and safe demo seeder:
 
----
+   ```sh
+   psql -U postgres -d lab11_db -f database/schema.sql
+   php scripts/seed_demo_user.php
+   ```
 
-## Project Structure
+   The seeder inserts the evaluation account `lab11student` with password `Demo@12345` only when that username is not already present. It does not overwrite existing records. For a new user, insert a username and a PHP `password_hash()` value into `users`.
+4. Start the PHP development server from this project directory:
 
-```
-lab11-login-validation/
-├── index.php              # Entry point (redirects to login)
-├── login.php              # Login page + POST handler
-├── dashboard.php          # Protected welcome/dashboard page
-├── logout.php             # Session destroy + redirect
-├── health.php             # Health-check endpoint (Render)
-│
-├── config/
-│   └── database.php       # PDO connection factory
-│
-├── includes/
-│   ├── session.php        # Session helpers, CSRF functions
-│   ├── header.php         # Shared HTML <head>
-│   └── footer.php         # Shared footer + script tag
-│
-├── database/
-│   └── schema.sql         # PostgreSQL table definition
-│
-├── scripts/
-│   └── seed_demo_user.php # Safe database seeder (no duplicates)
-│
-├── assets/
-│   ├── css/style.css      # Full custom CSS (no frameworks)
-│   └── js/script.js       # Vanilla JS (toggle, copy, spinner)
-│
-├── Dockerfile             # PHP 8.3 + Apache + pdo_pgsql
-├── docker-entrypoint.sh   # Seeds DB then starts Apache
-├── render.yaml            # Render deployment config
-├── .env.example           # Environment variable template
-├── .gitignore
-└── README.md
-```
+   ```sh
+   php -S localhost:8000
+   ```
 
----
+5. Open <http://localhost:8000> and sign in. Use the seeded evaluation account, or an existing account in your database.
 
-## Local Setup
+## Authentication flow
 
-### Prerequisites
+The server rejects missing fields before querying. It selects the matching user using a PDO prepared statement, then checks the submitted password with `password_verify()` against the stored `password_hash`. A match regenerates the PHP session ID and stores the user's ID and name in the session before redirecting to the protected dashboard. A mismatch produces the same generic error for unknown names and wrong passwords. User-entered values are escaped on output; the password is never printed in the page.
 
-- **PHP 8.x** with `pdo` and `pdo_pgsql` extensions
-- **PostgreSQL** (local or Neon)
+## Evaluation cases
 
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/<your-username>/lab11-login-validation.git
-cd lab11-login-validation
-```
-
-### 2. Configure the environment
-
-```bash
-cp .env.example .env
-```
-
-Edit `.env` with your local PostgreSQL credentials:
-
-```
-DB_HOST=localhost
-DB_PORT=5432
-DB_NAME=lab11_db
-DB_USER=postgres
-DB_PASSWORD=your_password
-DB_SSLMODE=prefer
-```
-
-### 3. Create the database
-
-Using psql:
-
-```sql
-CREATE DATABASE lab11_db;
-```
-
-### 4. Run the schema + seed
-
-```bash
-php scripts/seed_demo_user.php
-```
-
-This creates the `users` table and inserts the demo user (safe to run multiple times — no duplicates).
-
-### 5. Start the development server
-
-```bash
-php -S localhost:8000
-```
-
-Open [http://localhost:8000](http://localhost:8000) in your browser.
-
----
-
-## Checking PHP PDO Extensions
-
-```bash
-php -m | findstr pdo
-```
-
-You should see `pdo` and `pdo_pgsql` listed.
-
----
-
-## Security Features
-
-| Feature                  | Implementation                              |
-|--------------------------|---------------------------------------------|
-| Password storage         | `password_hash()` with bcrypt (cost 12)     |
-| Password verification    | `password_verify()`                         |
-| SQL injection prevention | PDO prepared statements with named params   |
-| CSRF protection          | Per-session CSRF token on login form        |
-| Session fixation         | `session_regenerate_id(true)` after login   |
-| Session security         | HttpOnly, SameSite=Strict session cookie    |
-| Output escaping          | `htmlspecialchars()` on all user output     |
-| Credential storage       | Environment variables only (no hardcoding)  |
-| Error messages           | Generic — does not reveal which field failed|
-
----
-
-## Test Cases
-
-| # | Action                              | Expected Result                |
-|---|-------------------------------------|-------------------------------|
-| 1 | Correct username + correct password | Dashboard / welcome page       |
-| 2 | Correct username + wrong password   | "Invalid username or password" |
-| 3 | Wrong username + wrong password     | "Invalid username or password" |
-| 4 | Empty fields submitted              | Field validation messages       |
-| 5 | SQL injection in username field     | Login rejected; DB unaffected  |
-| 6 | Direct access to dashboard.php      | Redirected to login page       |
-| 7 | Logout then browser back button     | Redirected to login page       |
-
----
-
-## Docker (Local)
-
-```bash
-docker build -t lab11-login-validation .
-docker run -p 8080:80 \
-  -e DB_HOST=host.docker.internal \
-  -e DB_PORT=5432 \
-  -e DB_NAME=lab11_db \
-  -e DB_USER=postgres \
-  -e DB_PASSWORD=your_password \
-  -e DB_SSLMODE=prefer \
-  lab11-login-validation
-```
-
-Open [http://localhost:8080](http://localhost:8080).
-
----
-
-## Deployment (Render + Neon PostgreSQL)
-
-See [Section 10 of the assignment instructions] for the step-by-step deployment guide.
-
-**Environment variables to set on Render:**
-
-| Variable     | Description                    |
-|--------------|--------------------------------|
-| `DB_HOST`    | Neon hostname                  |
-| `DB_PORT`    | `5432`                         |
-| `DB_NAME`    | Neon database name             |
-| `DB_USER`    | Neon username                  |
-| `DB_PASSWORD`| Neon password                  |
-| `DB_SSLMODE` | `require`                      |
-
-The `docker-entrypoint.sh` script automatically runs `seed_demo_user.php` on each deployment start (safe, no duplicates).
-
----
-
-## Technology Stack
-
-- **PHP 8.3**
-- **PostgreSQL** (via Neon for production)
-- **PDO** — prepared statements
-- **HTML5 / CSS3 / Vanilla JS**
-- **Apache** (via Docker on Render)
-
----
-
-*Lab 11 — BTech CSE Web Programming*
+- Correct account → personalized welcome page.
+- Unknown username or incorrect password → generic sign-in error.
+- Both fields empty, or either field empty → required-field validation errors.
+- SQL-injection-style username → treated as a literal username by the prepared query; no match returns the generic error.
+- Logout → session is destroyed and sign-in is shown again.

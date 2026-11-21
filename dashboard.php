@@ -9,7 +9,7 @@ requireAuth(); // Redirects to login.php if not authenticated
 $username = htmlspecialchars($_SESSION['username']);
 $loginAt  = htmlspecialchars($_SESSION['login_at'] ?? 'Unknown');
 
-$pageTitle = 'Dashboard — ACCESS';
+$pageTitle = 'Welcome — Luma';
 $bodyClass = 'page-dashboard';
 include __DIR__ . '/includes/header.php';
 ?>
@@ -22,7 +22,7 @@ include __DIR__ . '/includes/header.php';
             <div class="nav-logo" aria-hidden="true">
                 <span class="nav-logo__dot"></span>
             </div>
-            <span class="dashboard-nav__title">ACCESS</span>
+            <span class="dashboard-nav__title">LUMA</span>
             <span class="dashboard-nav__badge">LAB 11</span>
         </div>
         <div class="dashboard-nav__right">
